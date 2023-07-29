@@ -17,7 +17,7 @@ public class UserService {
         if(hotel.getHotelName()==null)return "FAILURE";
 
         UserRepository hotelObj = new UserRepository();
-        if(hotelObj.getHotel()!=null)return "FAILURE";
+        if(hotelObj.getHotel(hotel.getHotelName())!=null)return "FAILURE";
         hotelObj.addHotel(hotel.getHotelName(),hotel);
 
         return "SUCCESS";
