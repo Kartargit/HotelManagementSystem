@@ -4,6 +4,7 @@ import com.driver.model.Booking;
 import com.driver.model.Facility;
 import com.driver.model.Hotel;
 import com.driver.model.User;
+import com.driver.services.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +30,10 @@ public class HotelManagementController {
         //Incase somebody is trying to add the duplicate hotelName return FAILURE
         //in all other cases return SUCCESS after successfully adding the hotel to the hotelDb.
 
-
+        if(hotel!=null){
+            UserService serviceHotelObj = new UserService();
+            return serviceHotelObj.addHotel(hotel);
+        }
         return null;
     }
 
@@ -38,8 +42,12 @@ public class HotelManagementController {
 
         //You need to add a User Object to the database
         //Assume that user will always be a valid user and return the aadharCardNo of the user
+        if(user!=null){
+            UserService serviceUserObj = new UserService();
+            return serviceUserObj.addUser(user);
+        }
 
-       return null;
+        return null;
     }
 
     @GetMapping("/get-hotel-with-most-facilities")
@@ -48,7 +56,9 @@ public class HotelManagementController {
         //Out of all the hotels we have added so far, we need to find the hotelName with most no of facilities
         //Incase there is a tie return the lexicographically smaller hotelName
         //Incase there is not even a single hotel with atleast 1 facility return "" (empty string)
-
+        UserService serviceUserObj = new UserService();
+        String res = serviceUserObj.getHotelWithMostFacilities();
+        if(res!=null)return res;
         return null;
     }
 
@@ -61,14 +71,17 @@ public class HotelManagementController {
         //Calculate the total amount paid by the person based on no. of rooms booked and price of the room per night.
         //If there arent enough rooms available in the hotel that we are trying to book return -1 
         //in other case return total amount paid 
-        
+        UserService bookRoomServiceObj = new UserService();
+        if(bookRoomServiceObj.bookRoom(booking)>0)return bookRoomServiceObj.bookRoom(booking);
         return 0;
     }
     
     @GetMapping("/get-bookings-by-a-person/{aadharCard}")
     public int getBookings(@PathVariable("aadharCard")Integer aadharCard)
     {
-        //In this function return the bookings done by a person 
+        //In this function return the bookings done by a person
+        UserService bookingServiceObj = new UserService();
+        if(bookingServiceObj.getBookings(aadharCard)>0)return bookingServiceObj.getBookings(aadharCard);
         return 0;
     }
 
@@ -79,6 +92,9 @@ public class HotelManagementController {
         //If the hotel is already having that facility ignore that facility otherwise add that facility in the hotelDb
         //return the final updated List of facilities and also update that in your hotelDb
         //Note that newFacilities can also have duplicate facilities possible
+        UserService obj = new UserService();
+        Hotel name = obj.getUpdatedFacilities(hotelName,newFacilities);
+        if(name!=null)return name;
         return null;
     }
 
