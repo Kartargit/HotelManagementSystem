@@ -25,7 +25,9 @@ public class UserRepository {
     public void addUser(Integer adhaarNo, User user){
        userDb.put(adhaarNo,user);
     }
-
+public HashMap<String,Hotel> getHotelDb(){
+        return hotelDb;
+}
     public String getHotelWithMostFacilities() {
         int facilityCount = 0;
         String hotelName = "zzzz" ;
