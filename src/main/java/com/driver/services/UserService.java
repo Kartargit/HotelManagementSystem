@@ -22,8 +22,7 @@ public class UserService {
         }
 
             UserRepository hotelObj2 = new UserRepository();
-            hotelObj2.addHotel(name,hotel);
-            return "SUCCESS";
+            return hotelObj2.addHotel(name,hotel);
 
     }
     public Integer addUser(User user){
@@ -100,7 +99,6 @@ public class UserService {
         }
         hotel.setFacilities(hotelFacility);
         UserRepository obj2 = new UserRepository();
-        obj2.addHotel(hotelName,hotel);
 
         return hotel;
     }
