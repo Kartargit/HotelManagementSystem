@@ -44,7 +44,7 @@ public class UserService {
                facilityCount = hotels.get(name).getFacilities().size();
            }
            else if (hotels.get(name).getFacilities().size()==facilityCount) {
-               if(hotelName.compareTo(name)>0){
+               if(hotelName.compareTo(name)<0){
                    hotelName = name;
                }
            }
