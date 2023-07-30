@@ -26,8 +26,22 @@ public class UserRepository {
        userDb.put(adhaarNo,user);
     }
 
-    public HashMap<String, Hotel> getHotelDb() {
-        return hotelDb;
+    public String getHotelWithMostFacilities() {
+        int facilityCount = 0;
+        String hotelName = "zzzz" ;
+        for(String name:hotelDb.keySet()){
+            if(hotelDb.get(name).getFacilities().size()>facilityCount){
+                hotelName = name;
+                facilityCount = hotelDb.get(name).getFacilities().size();
+            }
+            else if (hotelDb.get(name).getFacilities().size()==facilityCount) {
+                if(hotelName.compareTo(name)>0){
+                    hotelName = name;
+                }
+            }
+        }
+        if(facilityCount==0)return "";
+        return hotelName;
     }
 
     public HashMap<String, Booking> getBookingDb() {

@@ -38,8 +38,7 @@ public class HotelManagementController {
         //You need to add a User Object to the database
         //Assume that user will always be a valid user and return the aadharCardNo of the user
 
-            UserService serviceUserObj = new UserService();
-            return serviceUserObj.addUser(user);
+            return serviceObj.addUser(user);
 
     }
 
@@ -49,9 +48,8 @@ public class HotelManagementController {
         //Out of all the hotels we have added so far, we need to find the hotelName with most no of facilities
         //Incase there is a tie return the lexicographically smaller hotelName
         //Incase there is not even a single hotel with atleast 1 facility return "" (empty string)
-        UserService serviceUserObj = new UserService();
-        String res = serviceUserObj.getHotelWithMostFacilities();
-        return res;
+
+        return serviceObj.getHotelWithMostFacilities();
     }
 
     @PostMapping("/book-a-room")

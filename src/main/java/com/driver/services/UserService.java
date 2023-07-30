@@ -25,24 +25,7 @@ public class UserService {
         return adhaarNo;
     }
     public String getHotelWithMostFacilities(){
-        UserRepository hotelObj = new UserRepository();
-        HashMap<String, Hotel> hotels = hotelObj.getHotelDb();
-
-        int facilityCount = 0;
-        String hotelName = "zzzz" ;
-       for(String name:hotels.keySet()){
-           if(hotels.get(name).getFacilities().size()>facilityCount){
-               hotelName = name;
-               facilityCount = hotels.get(name).getFacilities().size();
-           }
-           else if (hotels.get(name).getFacilities().size()==facilityCount) {
-               if(hotelName.compareTo(name)<0){
-                   hotelName = name;
-               }
-           }
-       }
-       if(facilityCount==0)return "";
-        return hotelName;
+       return repositoryObj.getHotelWithMostFacilities();
     }
 
 
