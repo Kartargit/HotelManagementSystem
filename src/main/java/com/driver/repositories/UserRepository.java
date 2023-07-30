@@ -13,13 +13,14 @@ public class UserRepository {
     HashMap<Integer, User> userDb = new HashMap<>();
     HashMap<String, Booking> bookingDb = new HashMap<>();
     HashMap<Integer,Integer> userBooking = new HashMap<>();
-    public String addHotels(String name, Hotel hotel){
-        if(hotelDb.containsKey(name))return "FAILURE";
+    public String addHotels(Hotel hotel){
+        if(hotel==null||hotel.getHotelName()==null||hotelDb.containsKey(hotel.getHotelName())){
+            return "FAILURE";
+        }
         else{
-            hotelDb.put(name,hotel);
+            hotelDb.put(hotel.getHotelName(),hotel);
             return "SUCCESS";
         }
-
     }
     public void addUser(Integer adhaarNo, User user){
        userDb.put(adhaarNo,user);

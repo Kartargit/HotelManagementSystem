@@ -13,19 +13,10 @@ import java.util.List;
 import java.util.UUID;
 public class UserService {
 
+    UserRepository repositoryObj = new UserRepository();
     public String addHotel(Hotel hotel){
 
-
-
-        if(hotel==null||hotel.getHotelName()==null){
-            return "FAILURE";
-        }
-        else{
-            UserRepository hotelObj2 = new UserRepository();
-            String name = hotel.getHotelName();
-            return hotelObj2.addHotels(name,hotel);
-        }
-
+            return repositoryObj.addHotels(hotel);
     }
     public Integer addUser(User user){
         int adhaarNo = user.getaadharCardNo();
