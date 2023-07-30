@@ -15,14 +15,16 @@ public class UserService {
 
     public String addHotel(Hotel hotel){
 
-        UserRepository hotelObj = new UserRepository();
-        String name = hotel.getHotelName();
-        if(hotelObj.getHotelDb().containsKey(name)){
+
+
+        if(hotel==null||hotel.getHotelName()==null){
             return "FAILURE";
         }
-
+        else{
             UserRepository hotelObj2 = new UserRepository();
-            return hotelObj2.addHotel(name,hotel);
+            String name = hotel.getHotelName();
+            return hotelObj2.addHotels(name,hotel);
+        }
 
     }
     public Integer addUser(User user){

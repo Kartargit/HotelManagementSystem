@@ -30,12 +30,8 @@ public class HotelManagementController {
         //Incase somebody is trying to add the duplicate hotelName return FAILURE
         //in all other cases return SUCCESS after successfully adding the hotel to the hotelDb.
 
-        if(hotel!=null||hotel.getHotelName()!=null){
-
             UserService serviceHotelObj = new UserService();
             return serviceHotelObj.addHotel(hotel);
-        }
-        return "FAILURE";
     }
 
     @PostMapping("/add-user")
