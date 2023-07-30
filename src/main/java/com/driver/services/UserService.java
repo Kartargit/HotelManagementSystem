@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
+
 public class UserService {
 
     UserRepository repositoryObj = new UserRepository();
@@ -30,52 +30,14 @@ public class UserService {
 
 
     public int bookRoom(Booking booking){
-
-        UserRepository bookingObj = new UserRepository();
-        HashMap<String, Hotel> hotels = bookingObj.getHotelDb();
-
-        String hotelName = booking.getHotelName();
-
-        int availableRoom = hotels.get(hotelName).getAvailableRooms();
-
-        if(availableRoom>=booking.getNoOfRooms()){
-            int price = hotels.get(hotelName).getPricePerNight();
-
-            String uuid = String.valueOf(UUID.randomUUID());
-            int totalPrice = booking.getNoOfRooms()*price;
-
-            booking.setBookingId(uuid);
-            booking.setAmountToBePaid(totalPrice);
-
-            bookingObj.addBooking(uuid,booking,booking.getBookingAadharCard());
-
-            hotels.get(hotelName).setAvailableRooms(availableRoom-booking.getNoOfRooms());
-
-            return totalPrice;
-        }
-        return -1;
+        return repositoryObj.bookRoom(booking);
     }
 
     public int getBookings(Integer aadharNo){
-        UserRepository userBookingList = new UserRepository();
-        return userBookingList.getBookingList(aadharNo);
+
+        return repositoryObj.getBookingList(aadharNo);
     }
     public Hotel getUpdatedFacilities(String hotelName,List<Facility> newFacilities){
-        UserRepository obj = new UserRepository();
-        Hotel hotel = obj.getHotelDb().get(hotelName);
-
-        List<Facility> hotelFacility = hotel.getFacilities();
-        for(Facility facility: newFacilities){
-            if(hotelFacility.contains(facility)){
-                continue;
-            }
-            else {
-                hotelFacility.add(facility);
-            }
-        }
-        hotel.setFacilities(hotelFacility);
-        UserRepository obj2 = new UserRepository();
-
-        return hotel;
+        return repositoryObj.getUpdatedFacilities(hotelName,newFacilities);
     }
 }

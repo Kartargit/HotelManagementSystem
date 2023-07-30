@@ -1,12 +1,14 @@
 package com.driver.repositories;
 
 import com.driver.model.Booking;
+import com.driver.model.Facility;
 import com.driver.model.Hotel;
 import com.driver.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class UserRepository {
     HashMap<String, Hotel> hotelDb = new HashMap<>();
@@ -25,9 +27,7 @@ public class UserRepository {
     public void addUser(Integer adhaarNo, User user){
        userDb.put(adhaarNo,user);
     }
-public HashMap<String,Hotel> getHotelDb(){
-        return hotelDb;
-}
+
     public String getHotelWithMostFacilities() {
         int facilityCount = 0;
         String hotelName = "zzzz" ;
@@ -46,15 +46,48 @@ public HashMap<String,Hotel> getHotelDb(){
         return hotelName;
     }
 
-    public HashMap<String, Booking> getBookingDb() {
-        return bookingDb;
-    }
-    public void addBooking(String bookingId,Booking booking,Integer adhaarNo){
-        bookingDb.put(bookingId,booking);
-        userBooking.put(adhaarNo,userBooking.getOrDefault(adhaarNo,0)+1);
+    public int bookRoom(Booking booking){
+
+        String hotelName = booking.getHotelName();
+
+        int availableRoom = hotelDb.get(hotelName).getAvailableRooms();
+
+        if(availableRoom>=booking.getNoOfRooms()){
+            int price = hotelDb.get(hotelName).getPricePerNight();
+
+            String uuid = String.valueOf(UUID.randomUUID());
+            int totalPrice = booking.getNoOfRooms()*price;
+
+            booking.setBookingId(uuid);
+            booking.setAmountToBePaid(totalPrice);
+
+            bookingDb.put(uuid,booking);
+            userBooking.put(booking.getBookingAadharCard(),userBooking.getOrDefault(booking.getBookingAadharCard(),0)+1);
+            hotelDb.get(hotelName).setAvailableRooms(availableRoom-booking.getNoOfRooms());
+
+            return totalPrice;
+        }
+        return -1;
     }
     public int getBookingList(Integer aadharNo){
         return userBooking.get(aadharNo);
     }
+    public Hotel getUpdatedFacilities(String hotelName,List<Facility> newFacilities){
 
+        Hotel hotel = hotelDb.get(hotelName);
+
+        List<Facility> hotelFacility = hotel.getFacilities();
+        for(Facility facility: newFacilities){
+            if(hotelFacility.contains(facility)){
+                continue;
+            }
+            else {
+                hotelFacility.add(facility);
+            }
+        }
+        hotel.setFacilities(hotelFacility);
+        hotelDb.put(hotelName,hotel);
+
+        return hotel;
+    }
 }
