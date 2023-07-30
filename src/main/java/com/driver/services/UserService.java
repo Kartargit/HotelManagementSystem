@@ -16,11 +16,15 @@ public class UserService {
     public String addHotel(Hotel hotel){
 
         UserRepository hotelObj = new UserRepository();
+        String name = hotel.getHotelName();
+        if(hotelObj.getHotelDb().containsKey(name)){
+            return "FAILURE";
+        }
 
-        if(hotelObj.getHotelDb().containsKey(hotel.getHotelName()))return "FAILURE";
+            UserRepository hotelObj2 = new UserRepository();
+            hotelObj2.addHotel(name,hotel);
+            return "SUCCESS";
 
-        hotelObj.addHotel(hotel.getHotelName(),hotel);
-        return "SUCCESS";
     }
     public Integer addUser(User user){
         int adhaarNo = user.getaadharCardNo();
@@ -33,7 +37,7 @@ public class UserService {
         HashMap<String, Hotel> hotels = hotelObj.getHotelDb();
 
         int facilityCount = 0;
-        String hotelName = "";
+        String hotelName = "zzzz" ;
        for(String name:hotels.keySet()){
            if(hotels.get(name).getFacilities().size()>facilityCount){
                hotelName = name;
@@ -45,6 +49,7 @@ public class UserService {
                }
            }
        }
+       if(facilityCount==0)return "";
         return hotelName;
     }
 
@@ -84,15 +89,19 @@ public class UserService {
         UserRepository obj = new UserRepository();
         Hotel hotel = obj.getHotelDb().get(hotelName);
 
+        List<Facility> hotelFacility = hotel.getFacilities();
         for(Facility facility: newFacilities){
-            if(hotel.getFacilities().contains(facility)){
+            if(hotelFacility.contains(facility)){
                 continue;
             }
             else {
-                hotel.getFacilities().add(facility);
+                hotelFacility.add(facility);
             }
         }
-        obj.addHotel(hotelName,hotel);
+        hotel.setFacilities(hotelFacility);
+        UserRepository obj2 = new UserRepository();
+        obj2.addHotel(hotelName,hotel);
+
         return hotel;
     }
 }
