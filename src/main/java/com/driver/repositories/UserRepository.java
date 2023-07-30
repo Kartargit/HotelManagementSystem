@@ -12,7 +12,7 @@ public class UserRepository {
     HashMap<String, Hotel> hotelDb = new HashMap<>();
     HashMap<Integer, User> userDb = new HashMap<>();
     HashMap<String, Booking> bookingDb = new HashMap<>();
-    HashMap<Integer,List<Booking>> userBooking = new HashMap<Integer, List<Booking>>();
+    HashMap<Integer,Integer> userBooking = new HashMap<>();
     public void addHotel(String name, Hotel hotel){
 
         hotelDb.put(name,hotel);
@@ -29,16 +29,12 @@ public class UserRepository {
     public HashMap<String, Booking> getBookingDb() {
         return bookingDb;
     }
-    public void addBooking(String bookingId,Booking booking){
+    public void addBooking(String bookingId,Booking booking,Integer adhaarNo){
         bookingDb.put(bookingId,booking);
-        List<Booking> bookingList = userBooking.getOrDefault(booking.getBookingAadharCard(),new ArrayList<>());
-        bookingList.add(booking);
-        userBooking.put(booking.getBookingAadharCard(), bookingList);
+        userBooking.put(adhaarNo,userBooking.getOrDefault(adhaarNo,0)+1);
     }
     public int getBookingList(Integer aadharNo){
-        return userBooking.get(aadharNo).size();
+        return userBooking.get(aadharNo);
     }
-    public Hotel getHotel(String hotelName){
-        return hotelDb.get(hotelName);
-    }
+
 }

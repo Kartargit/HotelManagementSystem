@@ -14,12 +14,12 @@ import java.util.UUID;
 public class UserService {
 
     public String addHotel(Hotel hotel){
-        if(hotel.getHotelName()==null)return "FAILURE";
 
         UserRepository hotelObj = new UserRepository();
-        if(hotelObj.getHotel(hotel.getHotelName())!=null)return "FAILURE";
-        hotelObj.addHotel(hotel.getHotelName(),hotel);
 
+        if(hotelObj.getHotelDb().containsKey(hotel.getHotelName()))return "FAILURE";
+
+        hotelObj.addHotel(hotel.getHotelName(),hotel);
         return "SUCCESS";
     }
     public Integer addUser(User user){
@@ -33,37 +33,29 @@ public class UserService {
         HashMap<String, Hotel> hotels = hotelObj.getHotelDb();
 
         int facilityCount = 0;
-        HashMap<String,Integer> hotelFacility = new HashMap<>();
-
-        for(String hotel:hotels.keySet()){
-            if(hotels.get(hotel).getFacilities().size()!=0){
-                if(hotels.get(hotel).getFacilities().size()>facilityCount){
-                    facilityCount = hotels.get(hotel).getFacilities().size();
-                    hotelFacility.put(hotel,facilityCount);
-                }
-            }
-
-        }
-        if(facilityCount>0){
-            return getMostFacilityHotel(facilityCount,hotelFacility);
-        }
-        return "";
+        String hotelName = "";
+       for(String name:hotels.keySet()){
+           if(hotels.get(name).getFacilities().size()>facilityCount){
+               hotelName = name;
+               facilityCount = hotels.get(name).getFacilities().size();
+           }
+           else if (hotels.get(name).getFacilities().size()==facilityCount) {
+               if(hotelName.compareTo(name)>0){
+                   hotelName = name;
+               }
+           }
+       }
+        return hotelName;
     }
-    public String getMostFacilityHotel(Integer count,HashMap<String,Integer> hashMap){
-        List<String> hotelNames = new ArrayList<>();
-        for (String name: hashMap.keySet()){
-            if(hashMap.get(name)==count){
-                hotelNames.add(name);
-            }
-        }
-        if(hotelNames.size()>0)Collections.sort(hotelNames);
-        return hotelNames.get(0);
-    }
+
+
     public int bookRoom(Booking booking){
 
         UserRepository bookingObj = new UserRepository();
         HashMap<String, Hotel> hotels = bookingObj.getHotelDb();
+
         String hotelName = booking.getHotelName();
+
         int availableRoom = hotels.get(hotelName).getAvailableRooms();
 
         if(availableRoom>=booking.getNoOfRooms()){
@@ -74,7 +66,11 @@ public class UserService {
 
             booking.setBookingId(uuid);
             booking.setAmountToBePaid(totalPrice);
-            bookingObj.addBooking(uuid,booking);
+
+            bookingObj.addBooking(uuid,booking,booking.getBookingAadharCard());
+
+            hotels.get(hotelName).setAvailableRooms(availableRoom-booking.getNoOfRooms());
+
             return totalPrice;
         }
         return -1;
@@ -86,12 +82,16 @@ public class UserService {
     }
     public Hotel getUpdatedFacilities(String hotelName,List<Facility> newFacilities){
         UserRepository obj = new UserRepository();
-        Hotel hotel = obj.getHotel(hotelName);
-        List<Facility> facilities = hotel.getFacilities();
-        for(Facility fac:newFacilities){
-            facilities.add(fac);
+        Hotel hotel = obj.getHotelDb().get(hotelName);
+
+        for(Facility facility: newFacilities){
+            if(hotel.getFacilities().contains(facility)){
+                continue;
+            }
+            else {
+                hotel.getFacilities().add(facility);
+            }
         }
-        hotel.setFacilities(facilities);
         obj.addHotel(hotelName,hotel);
         return hotel;
     }

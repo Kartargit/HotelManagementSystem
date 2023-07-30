@@ -30,11 +30,11 @@ public class HotelManagementController {
         //Incase somebody is trying to add the duplicate hotelName return FAILURE
         //in all other cases return SUCCESS after successfully adding the hotel to the hotelDb.
 
-        if(hotel!=null){
+        if(hotel!=null&&hotel.getHotelName()!=null){
             UserService serviceHotelObj = new UserService();
             return serviceHotelObj.addHotel(hotel);
         }
-        return null;
+        return "FAILURE";
     }
 
     @PostMapping("/add-user")
@@ -42,12 +42,10 @@ public class HotelManagementController {
 
         //You need to add a User Object to the database
         //Assume that user will always be a valid user and return the aadharCardNo of the user
-        if(user!=null){
+
             UserService serviceUserObj = new UserService();
             return serviceUserObj.addUser(user);
-        }
 
-        return null;
     }
 
     @GetMapping("/get-hotel-with-most-facilities")
@@ -58,8 +56,7 @@ public class HotelManagementController {
         //Incase there is not even a single hotel with atleast 1 facility return "" (empty string)
         UserService serviceUserObj = new UserService();
         String res = serviceUserObj.getHotelWithMostFacilities();
-        if(res!=null)return res;
-        return null;
+        return res;
     }
 
     @PostMapping("/book-a-room")
@@ -72,8 +69,8 @@ public class HotelManagementController {
         //If there arent enough rooms available in the hotel that we are trying to book return -1 
         //in other case return total amount paid 
         UserService bookRoomServiceObj = new UserService();
-        if(bookRoomServiceObj.bookRoom(booking)>0)return bookRoomServiceObj.bookRoom(booking);
-        return 0;
+
+        return bookRoomServiceObj.bookRoom(booking);
     }
     
     @GetMapping("/get-bookings-by-a-person/{aadharCard}")
@@ -81,8 +78,7 @@ public class HotelManagementController {
     {
         //In this function return the bookings done by a person
         UserService bookingServiceObj = new UserService();
-        if(bookingServiceObj.getBookings(aadharCard)>0)return bookingServiceObj.getBookings(aadharCard);
-        return 0;
+        return bookingServiceObj.getBookings(aadharCard);
     }
 
     @PutMapping("/update-facilities")
@@ -93,9 +89,8 @@ public class HotelManagementController {
         //return the final updated List of facilities and also update that in your hotelDb
         //Note that newFacilities can also have duplicate facilities possible
         UserService obj = new UserService();
-        Hotel name = obj.getUpdatedFacilities(hotelName,newFacilities);
-        if(name!=null)return name;
-        return null;
+        Hotel hotel = obj.getUpdatedFacilities(hotelName,newFacilities);
+        return hotel;
     }
 
 }
